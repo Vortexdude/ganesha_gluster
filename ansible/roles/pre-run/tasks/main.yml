@@ -31,7 +31,29 @@
     state: restarted
     enabled: yes
 
-- name: export the configuration file for the nfs-ganesha
-  template:
-    src: exports.conf.j2
-    dest: /etc/ganesha/export.conf
+- name: get the volume
+  set_fact:
+    vol_name: "{{ volume_path.split('/')[-1] }}"
+
+- name: Download create-export-ganesha.sh and set the permission for exicutable
+  get_url:
+    url: https://raw.githubusercontent.com/gluster/glusterfs/release-3.10/extras/ganesha/scripts/create-export-ganesha.sh
+    dest: /usr/libexec/ganesha/create-export-ganesha.sh
+    mode: '755'
+
+- name: Download dbus-send.sh and set the permission for exicutable
+  get_url:
+    url: https://raw.githubusercontent.com/gluster/glusterfs/release-3.10/extras/ganesha/scripts/dbus-send.sh
+    dest: /usr/libexec/ganesha/dbus-send.sh
+    mode: '755'
+
+- name: "create the export for {{ vol_name }}"
+  shell: "/usr/libexec/ganesha/create-export-ganesha.sh {{ default_dir_for_ganesha }} on {{ vol_name }}"
+  regsiter: export
+
+- name: "create the features.cache-invalidation on for the gluster volume {{ vol_name }}"
+  shell: "gluster volume set \{{ vol_name }} features.cache-invalidation on"
+
+- name: export the volume using dbus-send
+  shell: "/usr/libexec/ganesha/dbus-send.sh {{ default_dir_for_ganesha }} on {{ vol_name }}"
+  notify: restart nfs-ganesha

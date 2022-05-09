@@ -24,3 +24,14 @@
     - debug: var=result.stdout
 
   when: ansible_facts['os_family'] == "RedHat"
+
+- name: enable and start the service
+  service:
+    name: nfs-ganesha
+    state: restarted
+    enabled: yes
+
+- name: export the configuration file for the nfs-ganesha
+  template:
+    src: exports.conf.j2
+    dest: /etc/ganesha/export.conf

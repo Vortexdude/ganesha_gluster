@@ -1,8 +1,3 @@
 - debug: var=hostvars[inventory_hostname]['groups']['node2']
 
-
-- name: install the nfs-ganesha
-  shell: cat /etc/os-release
-  register: result
-
 - debug: var=result.stdout

@@ -1,5 +1,5 @@
 
-- hosts: localhost
+- hosts: node2
   become: true
   roles:
     - { role: pre-run }

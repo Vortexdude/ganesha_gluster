@@ -20,6 +20,6 @@
         name: nfs-ganesha-gluster
       register: result
 
-    - debug: result.stdout
+    - debug: var=result.stdout
 
   when: "{{ ansible_os_family }} == RedHat"

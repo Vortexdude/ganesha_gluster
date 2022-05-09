@@ -9,13 +9,17 @@
         state: present
     
     - name: change the repo disable to enable using sed
-      command: sed -i -e "s/enabled=1/enabled=0/g" /etc/yum.repos.d/CentOS-NFS-Ganesha-30.repo
+      lineinfile:
+        path: /etc/yum.repos.d/CentOS-NFS-Ganesha-30.repo
+        regexp: '^enabled=1'
+        line: enabled=0
 
-    - name: add the repository
+    - name: install the nfs-ganesha-gluster using the repo
       yum:
         name: nfs-ganesha-gluster
         enablerepo: centos-nfs-ganesha30
         state: present
+      register: result
 
     - debug: var=result.stdout
 

@@ -1,3 +1,25 @@
 - debug: var=hostvars[inventory_hostname]['groups']['node2']
 
 - debug: msg="{{ ansible_os_family }}"
+
+- block:
+    - name: install the centos-release-nfs-ganesha30 package
+      yum: 
+        name: centos-release-nfs-ganesha30
+        state: present
+    
+    - name: change the repo disable to enable using sed
+      command: sed -i -e "s/enabled=1/enabled=0/g" /etc/yum.repos.d/CentOS-NFS-Ganesha-30.repo
+
+    - name: add the repository
+      yum_repository:
+        name: centos-nfs-ganesha30
+    
+    - name: install the nfs-ganesha-gluster
+      yum:
+        name: nfs-ganesha-gluster
+      register: result
+
+    - debug: result.stdout
+
+  when: "{{ ansible_os_family }}" == "RedHat"

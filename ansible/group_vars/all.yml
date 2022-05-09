@@ -1,0 +1,7 @@
+---
+master_node: hostvars[master].ansible_default_ipv4.address
+slave_node1: hostvars[slave1].ansible_default_ipv4.address
+slave_node2: hostvars[slave2].ansible_default_ipv4.address
+export_device: /dev/vdb
+export_dir: /data/brick1
+volume_name: gv0

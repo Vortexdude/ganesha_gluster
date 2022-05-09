@@ -12,13 +12,10 @@
       command: sed -i -e "s/enabled=1/enabled=0/g" /etc/yum.repos.d/CentOS-NFS-Ganesha-30.repo
 
     - name: add the repository
-      yum_repository:
-        name: centos-nfs-ganesha30
-    
-    - name: install the nfs-ganesha-gluster
       yum:
         name: nfs-ganesha-gluster
-      register: result
+        enablerepo: centos-nfs-ganesha30
+        state: present
 
     - debug: var=result.stdout
 
